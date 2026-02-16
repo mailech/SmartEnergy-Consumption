@@ -34,6 +34,7 @@ def generate_data():
     
     # Total power
     df['total_power'] = df['fridge'] + df['ac'] + df['lights'] + df['microwave']
+    print("Dataset shape:", df.shape)
     
     data_path = os.path.join("energy_consumption_project", "data", "raw", "energy_data.csv")
     df.to_csv(data_path, index=False)

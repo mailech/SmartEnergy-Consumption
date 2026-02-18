@@ -10,7 +10,7 @@ import os
 def generate_data():
     print("Generating synthetic energy data...")
     # Create date range for 6 months
-    date_rng = pd.date_range(start='1/1/2023', end='6/30/2023', freq='H')
+    date_rng = pd.date_range(start='1/1/2023', end='6/30/2023', freq='h')
     
     # Create synthetic data
     df = pd.DataFrame(date_rng, columns=['timestamp'])
@@ -36,7 +36,7 @@ def generate_data():
     df['total_power'] = df['fridge'] + df['ac'] + df['lights'] + df['microwave']
     print("Dataset shape:", df.shape)
     
-    data_path = os.path.join("energy_consumption_project", "data", "raw", "energy_data.csv")
+    data_path = "energy_data.csv"
     df.to_csv(data_path, index=False)
     print(f"Data saved to {data_path}")
 

@@ -1,0 +1,108 @@
+Project Title: Smart Home Energy Consumption Analysis
+Internship Phase: Data Exploration, Preprocessing & Time-Series Analysis
+1. DATA EXPLORATION (HomeC.csv)
+Dataset Overview:
+- 503,911 rows
+- 32 features
+- 28 numerical columns
+- 4 object columns (time, icon, summary, cloudCover)
+
+Key Steps Performed:
+- Loaded dataset using pandas
+- Checked null values and data types
+- Converted UNIX time column to datetime
+- Removed invalid timestamp entries
+- Set timestamp as index
+- Sorted data chronologically
+
+Descriptive Statistics:
+- Mean overall power usage: 0.8589 kW
+- Maximum usage observed: 14.71 kW
+- High variability detected in consumption patterns
+
+Zone-wise Energy Aggregation:
+Appliances grouped into:
+- Kitchen Zone
+- Living Zone
+- Heating Zone
+- Utility Zone
+
+Energy Contribution:
+- Heating: ~42%
+- Living: ~21%
+- Kitchen: ~21%
+- Utility: ~16%
+
+Insight:
+Heating is the dominant energy-consuming zone.
+
+2. HOURLY & ANOMALY ANALYSIS
+Hourly Analysis:
+- Extracted hour from timestamp
+- Calculated hourly average energy usage
+- Peak hour detected at 23:00
+- Lowest average around early afternoon
+
+High Energy Detection:
+Used statistical threshold:
+    Threshold = Mean + (2 × Std Dev)
+
+- Identified significant number of high-usage events
+- Living zone showed frequent spikes
+- Utility zone showed rare but extreme peaks
+
+Result:
+Energy spikes and daily patterns clearly identified.
+
+3. SYNTHETIC CLEAN DATA PREPROCESSING
+Dataset:
+- 4,321 rows
+- 6 columns (timestamp, fridge, ac, lights, microwave, total_power)
+- Hourly data from Jan 2023 to June 2023
+
+Preprocessing Steps:
+- Converted timestamp to datetime
+- Set timestamp as index
+- Verified proper time ordering
+
+Time Series Decomposition:
+Used additive model:
+    Y(t) = Trend + Seasonality + Residual
+
+- Period set to 24 (daily cycle)
+- Trend, seasonal and residual components visualized
+- Seasonal strength calculated: 0.00286
+
+Observation:
+Very weak seasonality detected in total_power.
+
+4. WEEKDAY VS WEEKEND ANALYSIS
+Weekday Average: 958.44
+Weekend Average: 976.26
+
+Observation:
+Weekend consumption slightly higher than weekdays
+
+5. MONTHLY TREND
+- Resampled data monthly
+- Computed average monthly consumption
+- Observed stable energy pattern across months
+
+6. DISTRIBUTION ANALYSIS
+Statistical Measures:
+- Skewness: 0.4641 (slightly right-skewed)
+- Kurtosis: -1.2595 (platykurtic, light tails)
+
+Histogram with normal curve overlay showed:
+- Data roughly symmetric
+- No extreme heavy-tail behavior
+
+7. FREQUENCY DOMAIN ANALYSIS (FFT)
+Applied Fast Fourier Transform (FFT) to detect dominant periodicity.
+
+Result:
+- Dominant detected period ≈ 4321 hours
+  (Corresponds to full dataset length)
+
+Interpretation:
+No strong repeating short-term cycle detected beyond overall trend.

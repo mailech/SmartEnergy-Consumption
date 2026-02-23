@@ -59,4 +59,4 @@ Completed data understanding
 
 Cleaned and preprocessed dataset
 
-Prepared data for bas
+Prepared data for baseline and advanced machine learning model

@@ -76,33 +76,66 @@ Used additive model:
 Observation:
 Very weak seasonality detected in total_power.
 
-4. WEEKDAY VS WEEKEND ANALYSIS
+4. Stationary test (ADF TEST)
+ - Applied Augmented Dickey-Fuller (ADF) test on total_power.
+ - ADF Statistic ≈ -2.98
+ - p-value ≈ 0.036
+
+Interpretation:
+Since p-value < 0.05, the null hypothesis was rejected, indicating the series is stationary at 5% significance level.
+
+5. Autocorrelation Analysis (ACF & PACF)
+ACF plotted to observe correlation across lags
+PACF plotted to identify direct lag dependencies
+
+Observation:
+ - Correlation gradually decreases across lags
+ - No strong sharp spikes indicating dominant autoregressive order
+ - Confirms weak structured temporal dependency
+
+6. Weekday VS Weekend Analysis
 Weekday Average: 958.44
 Weekend Average: 976.26
 
 Observation:
-Weekend consumption slightly higher than weekdays
+Weekend consumption is slightly higher than weekdays, suggesting marginal lifestyle-based variation.
 
-5. MONTHLY TREND
-- Resampled data monthly
-- Computed average monthly consumption
-- Observed stable energy pattern across months
+7. MONTHLY TREND ANALYSIS
+ - Data resampled monthly
+ - Computed average monthly consumption
 
-6. DISTRIBUTION ANALYSIS
-Statistical Measures:
-- Skewness: 0.4641 (slightly right-skewed)
-- Kurtosis: -1.2595 (platykurtic, light tails)
+Observation:
+Energy consumption remains relatively stable across the six-month period with no strong long-term seasonal pattern.
 
-Histogram with normal curve overlay showed:
-- Data roughly symmetric
-- No extreme heavy-tail behavior
+8. WEEKLY DISTRIBUTION (JANUARY ANALYSIS)
+ - Extracted January data and then Resampled to weekly averages
+ - Plotted weekly distribution
 
-7. FREQUENCY DOMAIN ANALYSIS (FFT)
-Applied Fast Fourier Transform (FFT) to detect dominant periodicity.
+Observation:
+Noticeable variation between weeks within January, indicating intra-month fluctuation rather than smooth monthly trend.
+
+9. POLYNOMIAL TREND MODELING (JANUARY – DAILY AVERAGE)
+ - To reduce hourly noise:
+ - Data resampled to daily averages
+ - Polynomial regression applied (Degree = 2)
+
+Observation:
+Slight upward trend across January
+
+10. DISTRIBUTION ANALYSIS
+Statistical Measures: Skewness: 0.4641 (slightly right-skewed), Kurtosis: -1.2595 (platykurtic)
+
+Observation:
+Data approximately symmetric
+No heavy-tailed extreme distribution
+Energy usage generally stable with moderate variability
+
+11. FREQUENCY DOMAIN ANALYSIS (FFT)
+Applied Fast Fourier Transform (FFT) to detect dominant periodic components.
 
 Result:
-- Dominant detected period ≈ 4321 hours
-  (Corresponds to full dataset length)
+Dominant detected period ≈ 4321 hours
+(Corresponding to dataset length)
 
 Interpretation:
-No strong repeating short-term cycle detected beyond overall trend.
+No strong short-term periodic cycles detected beyond overall dataset span. Confirms weak seasonality result from decomposition.

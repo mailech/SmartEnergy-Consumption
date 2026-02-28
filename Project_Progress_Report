@@ -127,8 +127,6 @@ Statistical Measures: Skewness: 0.4641 (slightly right-skewed), Kurtosis: -1.259
 
 Observation:
 Data approximately symmetric
-No heavy-tailed extreme distribution
-Energy usage generally stable with moderate variability
 
 11. FREQUENCY DOMAIN ANALYSIS (FFT)
 Applied Fast Fourier Transform (FFT) to detect dominant periodic components.
@@ -139,3 +137,37 @@ Dominant detected period ≈ 4321 hours
 
 Interpretation:
 No strong short-term periodic cycles detected beyond overall dataset span. Confirms weak seasonality result from decomposition.
+
+12. MONTHLY CHANGE POINT DETECTION (CUSUM ANALYSIS)
+To detect structural shifts (persistent increases or decreases) in daily average total power consumption on a monthly basis.
+
+CUSUM Methodology:
+Two cumulative sums were calculated:
+ - Positive CUSUM (S_pos) → detects sustained upward shifts.
+ - Negative CUSUM (S_neg) → detects sustained downward shifts.
+
+Dynamic Thresholding:
+ - Instead of fixed threshold, adaptive values were used:
+ - Drift = 0.25 × standard deviation
+ - Threshold = 4 × standard deviation
+ - This makes detection scale-dependent and robust to variability.
+
+Monthly Loop Analysis:
+ - Data grouped month-wise.
+ - CUSUM applied independently to each month.
+ - Checked if S_pos or S_neg exceeded threshold.
+ - Stored summary of shift detection.
+
+Interpretation:
+CUSUM revealed localized structural changes in early months but stability in later months. This confirms absence of strong long-term drift in the system.
+
+13. GRANGER CAUSALITY ANALYSIS (UPDATED RESULTS)
+To determine whether past appliance consumption contributes to predicting total power consumption.
+
+Precondition:
+ADF test confirmed stationarity (p-value = 0.0). Therefore, Granger causality test results are statistically valid.
+
+Interpretation:
+ - AC is the strongest predictive contributor to total power consumption.
+ - Microwave shows short-term predictive influence.
+ - Fridge and lights do not significantly improve forecasting of total energy usage.

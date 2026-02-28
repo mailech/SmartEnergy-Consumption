@@ -133,7 +133,6 @@ Applied Fast Fourier Transform (FFT) to detect dominant periodic components.
 
 Result:
 Dominant detected period ≈ 4321 hours
-(Corresponding to dataset length)
 
 Interpretation:
 No strong short-term periodic cycles detected beyond overall dataset span. Confirms weak seasonality result from decomposition.
@@ -161,7 +160,7 @@ Monthly Loop Analysis:
 Interpretation:
 CUSUM revealed localized structural changes in early months but stability in later months. This confirms absence of strong long-term drift in the system.
 
-13. GRANGER CAUSALITY ANALYSIS (UPDATED RESULTS)
+13. GRANGER CAUSALITY ANALYSIS
 To determine whether past appliance consumption contributes to predicting total power consumption.
 
 Precondition:

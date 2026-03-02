@@ -104,9 +104,6 @@ Weekend consumption is slightly higher than weekdays.
  - Data resampled monthly
  - Computed average monthly consumption
 
-Observation:
-Energy consumption remains relatively stable across the six-month period with no strong long-term seasonal pattern.
-
 8. WEEKLY DISTRIBUTION (JANUARY ANALYSIS)
  - Extracted January data and then Resampled to weekly averages
  - Plotted weekly distribution

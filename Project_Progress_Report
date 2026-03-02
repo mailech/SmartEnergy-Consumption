@@ -79,10 +79,10 @@ Very weak seasonality detected in total_power.
 4. Stationary test (ADF TEST)
  - Applied Augmented Dickey-Fuller (ADF) test on total_power.
  - ADF Statistic ≈ -2.98
- - p-value ≈ 0.036
+ - p-value ≈ 0.0939
 
 Interpretation:
-Since p-value < 0.05, the null hypothesis was rejected, indicating the series is stationary at 5% significance level.
+Since p-value > 0.05, the series is non- stationary.
 
 5. Autocorrelation Analysis (ACF & PACF)
 ACF plotted to observe correlation across lags
@@ -98,7 +98,7 @@ Weekday Average: 958.44
 Weekend Average: 976.26
 
 Observation:
-Weekend consumption is slightly higher than weekdays, suggesting marginal lifestyle-based variation.
+Weekend consumption is slightly higher than weekdays.
 
 7. MONTHLY TREND ANALYSIS
  - Data resampled monthly

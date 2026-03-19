@@ -1,176 +1,164 @@
-# Milestone 2 – Feature Engineering and Baseline Model Development
+# SMART ENERGY CONSUMPTION – MILESTONE 2 REPORT
 
-## 1. Objective
+## 1. Introduction
 
-The objective of this milestone is to prepare meaningful features from the dataset and build a baseline machine learning model to predict energy consumption.
-
-Feature engineering helps improve model performance by extracting useful information from existing data.
+In this milestone, we analyze energy consumption data over time using statistical and time-series techniques. The main objective is to understand patterns, trends, relationships, and predict future energy usage based on timestamp data.
 
 ---
 
-## 2. Feature Engineering
+## 2. Data Preprocessing
 
-Several new features were created from the dataset to capture energy usage patterns.
+A structured dataset was created using timestamp values with hourly frequency. The dataset includes features such as fridge, AC, and total power consumption.
 
-### Time-Based Features
+Basic data understanding was done using:
 
-Time related features were extracted from the timestamp to identify daily and monthly energy trends.
-
-Extracted features include:
-
-* **hour** – hour of the day
-* **day** – day of the month
-* **weekday** – day of the week
-* **month** – month of the year
-
-Example code:
-
-```python
-df['hour'] = df.index.hour
-df['day'] = df.index.day
-df['weekday'] = df.index.dayofweek
-df['month'] = df.index.month
-```
+* df.info() to check data types and structure
+* df.describe() to view statistical summary
 
 ---
 
-## 3. Lag Features
+## 3. Time-Based Feature Engineering
 
-Lag features represent previous energy consumption values.
-They help the model understand how past values influence future energy usage.
+From the timestamp column, important features were extracted:
 
-Two lag features were created:
+* Hour
+* Date
+* Month
 
-* **lag_1** → energy consumption in the previous hour
-* **lag_24** → energy consumption 24 hours earlier
-
-Example:
-
-```python
-df['lag_1'] = df['total_power'].shift(1)
-df['lag_24'] = df['total_power'].shift(24)
-```
+These features help in analyzing daily, weekly, and seasonal energy consumption patterns.
 
 ---
 
-## 4. Rolling Mean Features
+## 4. Polynomial Trend Analysis
 
-Rolling averages help smooth fluctuations and capture longer trends.
+Polynomial regression was applied to identify trends in total power consumption using NumPy functions.
 
-Created features:
+This helps in:
 
-* **rolling_mean_6** → average energy usage over the last 6 hours
-* **rolling_mean_24** → average energy usage over the last 24 hours
-
-Example:
-
-```python
-df['rolling_mean_6'] = df['total_power'].rolling(window=6).mean()
-df['rolling_mean_24'] = df['total_power'].rolling(window=24).mean()
-```
-
-Missing values produced during these operations were removed using:
-
-```python
-df = df.dropna()
-```
+* Understanding long-term trends
+* Smoothing noisy data
 
 ---
 
-## 5. Feature Selection
+## 5. Average Power Consumption
 
-The following features were used as input for the machine learning model:
+Average power consumption was calculated using groupby operations such as:
 
-* fridge
-* ac
-* lights
-* microwave
-* hour
-* day
-* month
-* lag_1
-* lag_24
-* rolling_mean_6
-* rolling_mean_24
+df.groupby('date')['total_power'].mean()
 
-Target variable:
+This helps identify:
 
-* **total_power**
+* Daily average usage
+* Peak consumption periods
 
 ---
 
-## 6. Dataset Splitting
+## 6. Volatility Analysis
 
-The dataset was divided into training and testing sets.
+Volatility in energy consumption was measured using:
 
-* **80% training data**
-* **20% testing data**
+* Standard deviation
+* Rolling variance
 
-Example:
-
-```python
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y,
-    test_size=0.2,
-    shuffle=False
-)
-```
-
-Shuffle was disabled because this is time-series data.
+This helps detect fluctuations and instability in energy usage.
 
 ---
 
-## 7. Baseline Model Development
+## 7. Energy Consumption Distribution
 
-A **Linear Regression model** was implemented as the baseline forecasting model.
+The distribution of energy consumption was analyzed using histograms and density plots.
 
-Example:
+This helps understand:
 
-```python
-model = LinearRegression()
-model.fit(X_train, y_train)
-y_pred = model.predict(X_test)
-```
+* Data spread
+* Skewness
+* Presence of outliers
 
 ---
 
-## 8. Model Evaluation
+## 8. Probability Distribution
 
-The model performance was evaluated using:
+Energy data was analyzed using probability distribution techniques to understand the likelihood of different consumption values.
 
-* **MAE (Mean Absolute Error)**
-* **RMSE (Root Mean Squared Error)**
+This is useful for:
 
-Example:
-
-```python
-mae = mean_absolute_error(y_test, y_pred)
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-```
-
-These metrics help measure how close the predicted energy values are to the actual values.
+* Predictive analysis
+* Risk estimation
 
 ---
 
-## 9. Visualization
+## 9. CUSUM Change Detection
 
-A comparison plot was created to visualize the difference between **actual energy consumption** and **predicted energy consumption**.
+CUSUM (Cumulative Sum) was used to detect sudden changes in energy consumption patterns.
 
-This helps understand how well the model captures energy patterns.
+This helps identify:
+
+* Anomalies
+* Sudden spikes or drops
 
 ---
 
-## 10. Summary
+## 10. Granger Causality Test
 
-In Milestone 2 the following tasks were completed:
+Granger causality was applied to check relationships between variables such as AC and total power.
 
-* Time-based feature extraction
-* Lag feature creation
-* Rolling mean feature generation
-* Feature selection
-* Train-test split
-* Linear Regression model implementation
-* Model evaluation using MAE and RMSE
-* Visualization of actual vs predicted energy consumption
+This helps determine:
 
-The baseline model provides a foundation for developing more advanced forecasting models in future milestones.
+* Whether one variable influences another
+* Cause-effect relationships
+
+---
+
+## 11. Holt-Winters Forecasting
+
+The Holt-Winters method was used for forecasting future energy consumption.
+
+It captures:
+
+* Trend
+* Seasonality
+
+---
+
+## 12. QQ Plot Analysis
+
+QQ plots were used to compare the distribution of energy data with a normal distribution.
+
+This helps check:
+
+* Data normality
+* Deviations from expected distribution
+
+---
+
+## 13. Correlation Analysis
+
+### Spearman Correlation
+
+Used to measure monotonic relationships between variables.
+
+### Kendall Correlation
+
+Used to measure rank-based relationships and is more robust for smaller datasets.
+
+These methods help in understanding relationships between different energy parameters.
+
+---
+
+## 14. Conclusion
+
+In this milestone, energy consumption data was analyzed using various statistical and time-series techniques. Trends, distributions, correlations, and forecasting models were explored successfully.
+
+This analysis can help in:
+
+* Smart energy management
+* Predictive modeling
+* Efficient resource utilization
+
+---
+
+## 15. Future Scope
+
+* Integration with real-time IoT data
+* Advanced machine learning models
+* Smart energy automation systems

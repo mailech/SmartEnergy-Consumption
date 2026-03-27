@@ -161,9 +161,106 @@ CUSUM revealed localized structural changes in early months but stability in lat
 To determine whether past appliance consumption contributes to predicting total power consumption.
 
 Precondition:
-ADF test confirmed stationarity (p-value = 0.0). Therefore, Granger causality test results are statistically valid.
+The original time series was found to be non-stationary based on ADF test. To satisfy the stationarity requirement for Granger causality analysis, first-order differencing was applied to the dataset.
 
 Interpretation:
  - AC is the strongest predictive contributor to total power consumption.
  - Microwave shows short-term predictive influence.
  - Fridge and lights do not significantly improve forecasting of total energy usage.
+
+14. PHASE SPACE ANALYSIS
+The phase space plot was constructed by plotting x(t) against x(t+1) to examine the underlying dynamics of the time series.
+
+Observation:
+The plot appears scattered without a clearly defined attractor structure. 
+This suggests that the system does not exhibit strong deterministic low-dimensional dynamics based on the visuals. 
+
+15. LYAPUNOV EXPONENT ESTIMATION
+The Lyapunov exponent was estimated to evaluate the sensitivity of the system to initial conditions.
+
+Observation:
+The computed Lyapunov exponent is negative (approximately -1.63), indicating that nearby trajectories converge over time.
+This suggests that the system is stable and does not exhibit chaotic behavior, with low sensitivity to initial conditions.
+
+16. CROSS SPECTRAL DENSITY ANALYSIS
+Cross Spectral Density (CSD) analysis was performed to examine the frequency-domain relationship between individual appliance consumption and total power usage.
+
+Observation:
+The CSD plots were generated to visualize shared frequency components between signals. 
+
+17. CORRELATION HEATMAP ANALYSIS
+A correlation heatmap was generated to analyze linear relationships between appliance-level features.
+
+Observation:
+The correlations between features were generally not close to ±1, indicating the absence of extremely strong linear relationships. 
+This suggests that the features are not highly redundant, although moderate correlations may still exist.
+
+18. MULTICOLLINEARITY CHECK USING VIF
+Variance Inflation Factor (VIF) analysis was conducted to detect multicollinearity among input features.
+
+Observation:
+All VIF values were close to 1 (below 5), indicating that multicollinearity is minimal and the features can be reliably used for modeling without significant redundancy.
+
+19. MUTUAL INFORMATION ANALYSIS
+Mutual Information (MI) analysis was used to measure the dependency between individual appliances and total power consumption, capturing both linear and nonlinear relationships.
+
+Observation:
+Among all appliances, the AC exhibited the highest mutual information with total power, indicating it has the strongest influence on overall energy consumption.
+Other appliances showed comparatively lower dependency.
+
+20. EXPONENTIALLY WEIGHTED MOVING AVERAGE(EWMA)
+Exponentially Weighted Moving Average (EWMA) smoothing was applied to the total power time series to reduce noise and enhance trend visibility.
+
+Observation:
+EWMA smoothing reduces short-term fluctuations and highlights the underlying trend more clearly.
+
+21. TIME-SERIES COMPLEXITY & ANOMALY DETECTION 
+ 21.1 Shannon Entropy
+Shannon Entropy measures randomness in the time series.
+
+Observation & Interpretation:
+Computed by converting data into a probability distribution.
+Obtained value ≈ 3.52.
+Indicates moderate randomness in energy consumption.
+Suggests presence of both structure and variability.
+
+ 21.2 Hurst Exponent (R/S Analysis)
+Measures long-term memory of the time series.
+
+Observation & Interpretation:
+Computed using Rescaled Range (R/S) method.
+Obtained value ≈ 0.86 (> 0.5).
+Indicates strong persistence (trend-following behavior).
+High/low consumption tends to continue over time.
+
+ 21.3 Cumulative Deviation Plot
+Shows cumulative deviation from mean over time.
+
+Observation & Interpretation:
+Plot exhibits a smooth V-shaped structure.
+Indicates presence of long-term trends.
+Supports the high Hurst exponent result and also, suggests data is not purely random.
+
+ 21.4 One-Class SVM (Anomaly Detection)
+Used for boundary-based anomaly detection.
+
+Observation & Interpretation:
+Trained only on normal data patterns.
+Detects points outside boundary as anomalies.
+Artificial anomalies (~2%) were introduced for testing.
+Model successfully identifies abnormal energy usage.
+
+ 21.5 Model Evaluation
+Recall = 1.0 → all anomalies detected.
+Precision ≈ 0.44 → some false positives present.
+F1 Score ≈ 0.61 → moderate balance.
+AUC = 1.0 → strong separability of classes.
+
+ 21.6 Hyperparameter Tuning
+Parameters tuned: nu and gamma.
+Tested multiple combinations.
+Best parameters:
+nu = 0.01
+gamma = 0.01
+Best F1 Score ≈ 0.96.
+Tuning significantly improved anomaly detection performance.

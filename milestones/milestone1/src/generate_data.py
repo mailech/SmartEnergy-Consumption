@@ -8,6 +8,7 @@ import numpy as np
 import os
 
 def generate_data():
+    np.random.seed(42)
     print("Generating synthetic energy data...")
     # Create date range for 6 months
     date_rng = pd.date_range(start='1/1/2023', end='6/30/2023', freq='h')

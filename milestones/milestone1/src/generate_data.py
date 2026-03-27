@@ -35,7 +35,7 @@ def generate_data():
     # Total power
     df['total_power'] = df['fridge'] + df['ac'] + df['lights'] + df['microwave']
     
-    data_path = os.path.join("data", "raw", "energy_data.csv")
+    data_path = os.path.join("Data", "energy_data.csv")
     df.to_csv(data_path, index=False)
     print(f"Data saved to {data_path}")
 

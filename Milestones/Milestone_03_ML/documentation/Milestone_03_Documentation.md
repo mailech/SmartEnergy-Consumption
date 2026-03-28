@@ -85,15 +85,21 @@ I analyzed peak energy usage, daily trends using rolling mean, predicted energy 
 This milestone helped in understanding energy usage patterns and predicting future energy consumption.
 
 11. Tools and Technologies Used
+
 Python
+
 Pandas
+
 NumPy
+
 Matplotlib
+
 Seaborn
+
 Scikit-learn
 
 
-12. Summary of Work
+13. Summary of Work
 
 Task	Method Used
 Data Cleaning	Pandas

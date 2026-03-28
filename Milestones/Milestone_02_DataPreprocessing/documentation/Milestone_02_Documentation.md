@@ -1,5 +1,5 @@
 
-Milestone – Data Cleaning, Preprocessing, EDA and Time Series Modeling
+Milestone2 – Data Cleaning, Preprocessing, EDA and Time Series Modeling
 
 1. Objective
 

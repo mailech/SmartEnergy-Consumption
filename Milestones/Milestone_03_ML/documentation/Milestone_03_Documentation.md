@@ -94,6 +94,7 @@ Scikit-learn
 
 
 12. Summary of Work
+
 Task	Method Used
 Data Cleaning	Pandas
 Resampling	Time-series
@@ -102,5 +103,3 @@ Rolling Mean	Trend Analysis
 Prediction	Linear Regression
 Forecasting	Lag Features
 Anomaly Detection	Z-score, One-Class SVM
-
-If you want, I can next give you Milestone 3 Viva Questions & Answers (very useful).

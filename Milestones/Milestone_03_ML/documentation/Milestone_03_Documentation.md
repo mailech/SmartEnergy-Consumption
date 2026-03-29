@@ -78,28 +78,62 @@ Z-Score Method (Statistical Method)
 One-Class SVM (Machine Learning Method)
 Anomalies represent abnormal or unusual energy usage.
 
-10. Conclusion
+ 10. Deep Learning Based Forecasting (LSTM and GRU)
+
+Deep learning models were used to perform time-series forecasting of energy consumption.
+
+Steps performed:
+
+* Normalized the dataset using MinMaxScaler.
+* Converted time-series data into sequences using a 24-hour window.
+* Used past 24 hours data to predict next hour energy consumption.
+* Split the data into training and testing sets.
+* Built and trained LSTM and GRU models.
+* Used dropout layers to reduce overfitting.
+* Made predictions on test data.
+* Applied inverse scaling to get original values.
+* Compared Actual vs Predicted values using plots.
+These models helped in predicting future energy consumption based on past usage patterns.
+
+
+11. Conclusion
 
 In Milestone 3, we performed time-series analysis, trend analysis, energy consumption prediction, forecasting, and anomaly detection on the smart home energy dataset.
 I analyzed peak energy usage, daily trends using rolling mean, predicted energy consumption using Linear Regression, forecasted future consumption using lag features, and detected anomalies using statistical and machine learning methods.
 This milestone helped in understanding energy usage patterns and predicting future energy consumption.
 
-11. Tools and Technologies Used
+12. Tools and Technologies Used
+
 Python
+
 Pandas
+
 NumPy
+
 Matplotlib
+
 Seaborn
+
 Scikit-learn
 
 
-12. Summary of Work
+13. Summary of Work
 
 Task	Method Used
+
 Data Cleaning	Pandas
+
 Resampling	Time-series
+
 Peak Analysis	Time-based
+
 Rolling Mean	Trend Analysis
+
 Prediction	Linear Regression
+
 Forecasting	Lag Features
+
 Anomaly Detection	Z-score, One-Class SVM
+
+Deep Learning Forecasting
+LSTM, GRU

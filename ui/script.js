@@ -3,7 +3,7 @@ function createBubbles() {
     const container = document.getElementById("bubbles");
     if (!container) return;
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 20; i++) {
         let b = document.createElement("span");
 
         let size = Math.random() * 50 + 10;

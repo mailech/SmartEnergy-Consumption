@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Input</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="bubbles" id="bubbles"></div>
+
+<div class="split">
+
+    <!-- LEFT SIDE -->
+    <div class="left-box">
+
+        <h2>Enter Energy Details (Watts)</h2>
+
+        <label>Fridge: <span id="f_val">50</span> W</label>
+        <input type="range" id="fridge" min="0" max="200" value="50">
+
+        <label>AC: <span id="ac_val">1000</span> W</label>
+        <input type="range" id="ac" min="0" max="2500" value="1000">
+
+        <label>Lights: <span id="l_val">40</span> W</label>
+        <input type="range" id="lights" min="0" max="200" value="40">
+
+        <label>Fan: <span id="fan_val">100</span> W</label>
+        <input type="range" id="fan" min="0" max="300" value="100">
+
+        <label>Microwave: <span id="m_val">800</span> W</label>
+        <input type="range" id="microwave" min="0" max="1500" value="800">
+
+        <br>
+
+        <input type="text" id="other_name" placeholder="Other device name">
+        <input type="number" id="other_power" placeholder="Watts">
+
+        <br><br>
+
+        <button onclick="saveAndShow()" class="btn">Save</button>
+        <a href="index.html" class="btn small">Previous</a>
+
+    </div>
+
+    <!-- RIGHT SIDE GRAPH -->
+    <div class="right-box">
+
+        <h3 id="liveTotal"></h3>
+        <h4 id="liveAvg"></h4>
+
+        <div class="graph-box">
+            <canvas id="liveChart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

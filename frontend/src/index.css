@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(135deg, #f3e8ff, #ffe4e6);
+}
+input {
+  padding: 10px;
+  margin: 5px 0;
+}
+button {
+  transition: all 0.3s ease;
+  transform: scale(1);
+}
+
+button:hover {
+  transform: scale(1.05);
+}

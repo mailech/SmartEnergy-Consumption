@@ -1,0 +1,22 @@
+# Python
+backend/__pycache__/
+backend/*.py[cod]
+*$py.class
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Datasets (if added later)
+*.csv
+New Data/
+Synthetic-Data/
+timed-data/
+Clean-Data/
+
+# Frontend dependencies
+frontend/node_modules/
+frontend/dist/
+
+# Environment
+.env
+.venv/

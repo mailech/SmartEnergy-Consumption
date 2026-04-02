@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartEnergy — Alerts</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2235;--accent:#00d4aa;--accent2:#0ea5e9;--accent3:#f59e0b;--accent4:#a78bfa;--text:#e2e8f0;--muted:#64748b;--border:rgba(255,255,255,0.07);--danger:#ef4444;--success:#22c55e;--sidebar-w:240px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+.sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;}
+.sidebar-logo{padding:24px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;}.logo-name span{color:var(--accent);}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto;}
+.nav-section-label{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;padding:8px 10px 6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:500;margin-bottom:2px;transition:all 0.2s;}
+.nav-item:hover{background:var(--surface2);color:var(--text);}
+.nav-item.active{background:rgba(0,212,170,0.12);color:var(--accent);}
+.nav-icon{font-size:16px;width:20px;text-align:center;}
+.nav-badge{margin-left:auto;background:var(--accent);color:#0a0e1a;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.nav-badge.red{background:var(--danger);color:#fff;}
+.sidebar-footer{padding:16px 12px;border-top:1px solid var(--border);}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:var(--surface2);}
+.avatar{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent4),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:14px;}
+.user-name{font-size:13px;font-weight:500;}.user-role{font-size:11px;color:var(--muted);}
+.logout-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:9px;background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;width:100%;margin-top:6px;transition:all 0.2s;text-decoration:none;}
+.logout-btn:hover{background:rgba(239,68,68,0.1);color:#ef4444;}
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.page-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;}
+.content{padding:28px;flex:1;max-width:900px;}
+.no-data-banner{background:rgba(14,165,233,0.08);border:1px solid rgba(14,165,233,0.2);border-radius:12px;padding:18px 22px;margin-bottom:24px;font-size:14px;color:var(--accent2);}
+.alert-card{border-radius:14px;padding:20px 22px;margin-bottom:14px;display:flex;align-items:flex-start;gap:16px;border:1px solid;}
+.alert-card.danger{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.25);}
+.alert-card.warning{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.25);}
+.alert-card.info{background:rgba(14,165,233,0.08);border-color:rgba(14,165,233,0.25);}
+.alert-card.success{background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.25);}
+.alert-icon{font-size:28px;flex-shrink:0;margin-top:2px;}
+.alert-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px;}
+.alert-card.danger .alert-title{color:#fca5a5;}
+.alert-card.warning .alert-title{color:var(--accent3);}
+.alert-card.info .alert-title{color:var(--accent2);}
+.alert-card.success .alert-title{color:var(--success);}
+.alert-msg{font-size:13px;color:var(--muted);line-height:1.6;}
+.alert-time{font-size:11px;color:var(--muted);margin-top:6px;opacity:0.7;}
+.section-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;}
+.count-badge{display:inline-block;background:var(--danger);color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:8px;}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-logo"><div class="logo-icon">⚡</div><div class="logo-name">Smart<span>Energy</span></div></div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <a href="/dashboard" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
+    <a href="/predictions" class="nav-item"><span class="nav-icon">🤖</span> Predictions <span class="nav-badge">AI</span></a>
+    <a href="/reports" class="nav-item"><span class="nav-icon">📋</span> Reports</a>
+    <a href="/alerts" class="nav-item active"><span class="nav-icon">🔔</span> Alerts {% if alerts %}<span class="nav-badge red">{{ alerts|length }}</span>{% endif %}</a>
+    <div class="nav-section-label" style="margin-top:12px">Data</div>
+    <a href="/upload" class="nav-item"><span class="nav-icon">⬆️</span> Upload Data</a>
+    <a href="/manual-entry" class="nav-item"><span class="nav-icon">✏️</span> Enter My Data</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card"><div class="avatar">👤</div><div><div class="user-name">{{ current_user.username }}</div><div class="user-role">Administrator</div></div></div>
+    <a href="/logout" class="logout-btn">🚪 Sign Out</a>
+  </div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="page-title">🔔 Alerts & Anomalies</div>
+  </header>
+  <div class="content">
+    {% if not has_data %}
+    <div class="no-data-banner">ℹ️ No dataset loaded. <a href="/upload" style="color:var(--accent);font-weight:600">Upload a CSV</a> to detect anomalies and generate alerts.</div>
+    {% endif %}
+
+    <div class="section-title">
+      Active Alerts
+      {% if alerts %}<span class="count-badge">{{ alerts|length }}</span>{% endif %}
+    </div>
+
+    {% if alerts %}
+      {% for a in alerts %}
+      <div class="alert-card {{ a.level }}">
+        <div class="alert-icon">{{ a.icon }}</div>
+        <div>
+          <div class="alert-title">{{ a.title }}</div>
+          <div class="alert-msg">{{ a.msg }}</div>
+          <div class="alert-time">🕐 {{ a.time }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="alert-card info">
+        <div class="alert-icon">ℹ️</div>
+        <div>
+          <div class="alert-title" style="color:var(--accent2)">No alerts yet</div>
+          <div class="alert-msg">Upload your energy dataset to start monitoring for anomalies, high usage events, and efficiency issues.</div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</main>
+</body>
+</html>

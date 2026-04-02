@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartEnergy — Enter Your Data</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2235;--accent:#00d4aa;--accent2:#0ea5e9;--accent3:#f59e0b;--accent4:#a78bfa;--text:#e2e8f0;--muted:#64748b;--border:rgba(255,255,255,0.07);--danger:#ef4444;--success:#22c55e;--sidebar-w:240px;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+  .sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;}
+  .sidebar-logo{padding:24px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+  .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .logo-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;}
+  .logo-name span{color:var(--accent);}
+  .sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto;}
+  .nav-section-label{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;padding:8px 10px 6px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:500;margin-bottom:2px;transition:all 0.2s;}
+  .nav-item:hover{background:var(--surface2);color:var(--text);}
+  .nav-item.active{background:rgba(0,212,170,0.12);color:var(--accent);}
+  .nav-icon{font-size:16px;width:20px;text-align:center;}
+  .nav-badge{margin-left:auto;background:var(--accent);color:#0a0e1a;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+  .sidebar-footer{padding:16px 12px;border-top:1px solid var(--border);}
+  .user-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:var(--surface2);}
+  .avatar{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent4),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+  .user-name{font-size:13px;font-weight:500;}.user-role{font-size:11px;color:var(--muted);}
+  .logout-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:9px;background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;width:100%;margin-top:6px;transition:all 0.2s;text-decoration:none;}
+  .logout-btn:hover{background:rgba(239,68,68,0.1);color:#ef4444;}
+  .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;}
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+  .page-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;}
+  .content{padding:28px;flex:1;max-width:1000px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px;}
+  .card-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px;}
+  .card-desc{font-size:13px;color:var(--muted);margin-bottom:24px;}
+  .section-label{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .appliance-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+  .appliance-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;transition:border-color 0.2s;}
+  .appliance-card:focus-within{border-color:var(--accent);}
+  .appliance-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+  .appliance-icon{font-size:22px;}
+  .appliance-name{font-size:13px;font-weight:600;color:var(--text);}
+  .appliance-unit{font-size:11px;color:var(--muted);}
+  .slider-wrap{display:flex;align-items:center;gap:10px;}
+  .slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:var(--border);outline:none;cursor:pointer;}
+  .slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 6px rgba(0,212,170,0.4);}
+  .slider-val{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--accent);min-width:48px;text-align:right;}
+  .num-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;margin-top:8px;text-align:center;}
+  .num-input:focus{border-color:var(--accent);}
+  .weather-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+  .form-group{margin-bottom:0;}
+  .form-label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:500;}
+  .form-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;}
+  .form-input:focus{border-color:var(--accent);}
+  .btn{padding:12px 24px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s;}
+  .btn-primary{background:linear-gradient(135deg,var(--accent),#00b894);color:#0a0e1a;font-weight:700;font-size:15px;}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,212,170,0.3);}
+  .btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+  .btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* Result panel */
+  .result-panel{display:none;background:var(--surface);border:1px solid rgba(0,212,170,0.3);border-radius:14px;padding:28px;margin-bottom:20px;}
+  .result-panel.show{display:block;}
+  .result-kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+  .result-kpi{background:var(--surface2);border-radius:12px;padding:18px;text-align:center;}
+  .result-kpi-label{font-size:12px;color:var(--muted);margin-bottom:6px;}
+  .result-kpi-value{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;}
+  .result-kpi-value.green{color:var(--accent);}
+  .result-kpi-value.blue{color:var(--accent2);}
+  .result-kpi-value.amber{color:var(--accent3);}
+  .suggestions-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+  .tip-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;}
+  .tip-icon{font-size:24px;margin-bottom:8px;}
+  .tip-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px;}
+  .tip-text{font-size:12px;color:var(--muted);line-height:1.6;}
+  .loading{display:none;text-align:center;padding:32px;}
+  .spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .section-divider{border:none;border-top:1px solid var(--border);margin:20px 0;}
+  .hours-note{font-size:12px;color:var(--muted);margin-top:4px;}
+
+  /* Flash messages */
+  .flash{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;}
+  .flash.success{background:rgba(0,212,170,0.12);border:1px solid rgba(0,212,170,0.3);color:var(--accent);}
+  .flash.error{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-logo"><div class="logo-icon">⚡</div><div class="logo-name">Smart<span>Energy</span></div></div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <a href="/dashboard" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
+    <a href="/devices" class="nav-item"><span class="nav-icon">🔌</span> Devices</a>
+    <a href="/predictions" class="nav-item"><span class="nav-icon">🤖</span> Predictions <span class="nav-badge">AI</span></a>
+    <a href="/reports" class="nav-item"><span class="nav-icon">📋</span> Reports</a>
+    <div class="nav-section-label" style="margin-top:12px">Data</div>
+    <a href="/manual-entry" class="nav-item active"><span class="nav-icon">✏️</span> Enter My Data</a>
+    <a href="/upload" class="nav-item"><span class="nav-icon">⬆️</span> Upload Data</a>
+    <div class="nav-section-label" style="margin-top:12px">Settings</div>
+    <a href="/settings" class="nav-item"><span class="nav-icon">⚙️</span> Settings</a>
+    <a href="/alerts" class="nav-item"><span class="nav-icon">🔔</span> Alerts <span class="nav-badge">3</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card"><div class="avatar">👤</div><div><div class="user-name">{{ current_user.username }}</div><div class="user-role">Administrator</div></div></div>
+    <a href="/logout" class="logout-btn">🚪 Sign Out</a>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div class="page-title">✏️ Enter Your Energy Data</div>
+  </header>
+  <div class="content">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}{% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}{% endif %}
+    {% endwith %}
+
+    <!-- Result Panel (shown after prediction) -->
+    <div class="result-panel" id="resultPanel">
+      <div class="card-title" style="margin-bottom:20px">🤖 Prediction Results</div>
+      <div class="result-kpi-grid">
+        <div class="result-kpi">
+          <div class="result-kpi-label">Predicted Total Usage</div>
+          <div class="result-kpi-value green" id="res-predicted">— kW</div>
+        </div>
+        <div class="result-kpi">
+          <div class="result-kpi-label">Model Accuracy</div>
+          <div class="result-kpi-value blue" id="res-accuracy">97.4%</div>
+        </div>
+        <div class="result-kpi">
+          <div class="result-kpi-label">Your Total Input</div>
+          <div class="result-kpi-value amber" id="res-total">— kW</div>
+        </div>
+      </div>
+      <hr class="section-divider">
+      <div class="card-title" style="margin-bottom:14px">💡 Smart Suggestions</div>
+      <div class="suggestions-grid" id="suggestionsList"></div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loadingPanel">
+      <div class="spinner"></div>
+      <div style="color:var(--muted);font-size:14px">Running AI prediction...</div>
+    </div>
+
+    <!-- Entry Form -->
+    <div class="card" id="entryForm">
+      <div class="card-title">Enter Appliance Readings</div>
+      <div class="card-desc">Enter the current power consumption for each appliance in your home. Use the sliders or type directly. All values are in kilowatts (kW).</div>
+
+      <!-- Heating -->
+      <div class="section-label">🔥 Heating & Cooling</div>
+      <div class="appliance-grid">
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">🔥</span><div><div class="appliance-name">Furnace 1</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="2" step="0.01" value="0.02" oninput="syncVal(this,'furnace1_val','furnace1')"><span class="slider-val" id="furnace1_val">0.02</span></div>
+          <input type="number" class="num-input" id="furnace1" name="furnace1" min="0" max="2" step="0.001" value="0.02" oninput="syncSlider(this,'furnace1_val')">
+        </div>
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">🔥</span><div><div class="appliance-name">Furnace 2</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="2" step="0.01" value="0.06" oninput="syncVal(this,'furnace2_val','furnace2')"><span class="slider-val" id="furnace2_val">0.06</span></div>
+          <input type="number" class="num-input" id="furnace2" name="furnace2" min="0" max="2" step="0.001" value="0.06" oninput="syncSlider(this,'furnace2_val')">
+        </div>
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">❄️</span><div><div class="appliance-name">Fridge</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="0.5" step="0.001" value="0.12" oninput="syncVal(this,'fridge_val','fridge')"><span class="slider-val" id="fridge_val">0.12</span></div>
+          <input type="number" class="num-input" id="fridge" name="fridge" min="0" max="0.5" step="0.001" value="0.12" oninput="syncSlider(this,'fridge_val')">
+        </div>
+      </div>
+
+      <!-- Kitchen -->
+      <div class="section-label">🍳 Kitchen</div>
+      <div class="appliance-grid">
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">🍽️</span><div><div class="appliance-name">Dishwasher</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="3" step="0.01" value="0" oninput="syncVal(this,'dishwasher_val','dishwasher')"><span class="slider-val" id="dishwasher_val">0.00</span></div>
+          <input type="number" class="num-input" id="dishwasher" name="dishwasher" min="0" max="3" step="0.001" value="0" oninput="syncSlider(this,'dishwasher_val')">
+        </div>
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">📡</span><div><div class="appliance-name">Microwave</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="2" step="0.01" value="0.001" oninput="syncVal(this,'microwave_val','microwave')"><span class="slider-val" id="microwave_val">0.00</span></div>
+          <input type="number" class="num-input" id="microwave" name="microwave" min="0" max="2" step="0.001" value="0.001" oninput="syncSlider(this,'microwave_val')">
+        </div>
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">🍷</span><div><div class="appliance-name">Wine Cellar</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="0.5" step="0.001" value="0.007" oninput="syncVal(this,'winecellar_val','winecellar')"><span class="slider-val" id="winecellar_val">0.01</span></div>
+          <input type="number" class="num-input" id="winecellar" name="winecellar" min="0" max="0.5" step="0.001" value="0.007" oninput="syncSlider(this,'winecellar_val')">
+        </div>
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">🔌</span><div><div class="appliance-name">Kitchen 12</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="1" step="0.001" value="0.0004" oninput="syncVal(this,'kitchen12_val','kitchen12')"><span class="slider-val" id="kitchen12_val">0.00</span></div>
+          <input type="number" class="num-input" id="kitchen12" name="kitchen12" min="0" max="1" step="0.001" value="0.0004" oninput="syncSlider(this,'kitchen12_val')">
+        </div>
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">🔌</span><div><div class="appliance-name">Kitchen 14</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="1" step="0.001" value="0.00015" oninput="syncVal(this,'kitchen14_val','kitchen14')"><span class="slider-val" id="kitchen14_val">0.00</span></div>
+          <input type="number" class="num-input" id="kitchen14" name="kitchen14" min="0" max="1" step="0.001" value="0.00015" oninput="syncSlider(this,'kitchen14_val')">
+        </div>
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">🔌</span><div><div class="appliance-name">Kitchen 38</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="1" step="0.001" value="0" oninput="syncVal(this,'kitchen38_val','kitchen38')"><span class="slider-val" id="kitchen38_val">0.00</span></div>
+          <input type="number" class="num-input" id="kitchen38" name="kitchen38" min="0" max="1" step="0.001" value="0" oninput="syncSlider(this,'kitchen38_val')">
+        </div>
+      </div>
+
+      <!-- Living & Office -->
+      <div class="section-label">🛋️ Living Spaces</div>
+      <div class="appliance-grid">
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">🛋️</span><div><div class="appliance-name">Living Room</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="1" step="0.001" value="0.004" oninput="syncVal(this,'livingroom_val','livingroom')"><span class="slider-val" id="livingroom_val">0.00</span></div>
+          <input type="number" class="num-input" id="livingroom" name="livingroom" min="0" max="1" step="0.001" value="0.004" oninput="syncSlider(this,'livingroom_val')">
+        </div>
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">💼</span><div><div class="appliance-name">Home Office</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="1" step="0.001" value="0.44" oninput="syncVal(this,'homeoffice_val','homeoffice')"><span class="slider-val" id="homeoffice_val">0.44</span></div>
+          <input type="number" class="num-input" id="homeoffice" name="homeoffice" min="0" max="1" step="0.001" value="0.44" oninput="syncSlider(this,'homeoffice_val')">
+        </div>
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">🚗</span><div><div class="appliance-name">Garage Door</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="0.5" step="0.001" value="0.013" oninput="syncVal(this,'garage_val','garage')"><span class="slider-val" id="garage_val">0.01</span></div>
+          <input type="number" class="num-input" id="garage" name="garage" min="0" max="0.5" step="0.001" value="0.013" oninput="syncSlider(this,'garage_val')">
+        </div>
+      </div>
+
+      <!-- Outdoor -->
+      <div class="section-label">🌿 Outdoor & Utility</div>
+      <div class="appliance-grid">
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">🌾</span><div><div class="appliance-name">Barn</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="0.5" step="0.001" value="0.031" oninput="syncVal(this,'barn_val','barn')"><span class="slider-val" id="barn_val">0.03</span></div>
+          <input type="number" class="num-input" id="barn" name="barn" min="0" max="0.5" step="0.001" value="0.031" oninput="syncSlider(this,'barn_val')">
+        </div>
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">💧</span><div><div class="appliance-name">Well Pump</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="0.5" step="0.001" value="0.001" oninput="syncVal(this,'well_val','well')"><span class="slider-val" id="well_val">0.00</span></div>
+          <input type="number" class="num-input" id="well" name="well" min="0" max="0.5" step="0.001" value="0.001" oninput="syncSlider(this,'well_val')">
+        </div>
+        <div class="appliance-card">
+          <div class="appliance-header"><span class="appliance-icon">☀️</span><div><div class="appliance-name">Solar Generated</div><div class="appliance-unit">kW</div></div></div>
+          <div class="slider-wrap"><input type="range" class="slider" min="0" max="10" step="0.01" value="0.003" oninput="syncVal(this,'solar_val','solar')"><span class="slider-val" id="solar_val">0.00</span></div>
+          <input type="number" class="num-input" id="solar" name="solar" min="0" max="10" step="0.001" value="0.003" oninput="syncSlider(this,'solar_val')">
+        </div>
+      </div>
+
+      <!-- Weather -->
+      <div class="section-label">🌤️ Weather Conditions <span style="font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(optional but improves accuracy)</span></div>
+      <div class="weather-grid">
+        <div class="form-group">
+          <label class="form-label">Temperature (°F)</label>
+          <input class="form-input" type="number" id="temperature" name="temperature" value="36" step="0.1" placeholder="e.g. 36">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Humidity (0–1)</label>
+          <input class="form-input" type="number" id="humidity" name="humidity" value="0.62" step="0.01" min="0" max="1" placeholder="e.g. 0.62">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Wind Speed (mph)</label>
+          <input class="form-input" type="number" id="windspeed" name="windspeed" value="9.18" step="0.1" placeholder="e.g. 9.18">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Apparent Temp (°F)</label>
+          <input class="form-input" type="number" id="apparenttemp" name="apparenttemp" value="29" step="0.1" placeholder="e.g. 29">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pressure (hPa)</label>
+          <input class="form-input" type="number" id="pressure" name="pressure" value="1016" step="0.1" placeholder="e.g. 1016">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dew Point (°F)</label>
+          <input class="form-input" type="number" id="dewpoint" name="dewpoint" value="24.4" step="0.1" placeholder="e.g. 24.4">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:8px">
+        <button class="btn btn-primary" onclick="submitEntry()">🤖 Predict My Usage</button>
+        <button class="btn btn-secondary" onclick="resetForm()">↩️ Reset</button>
+      </div>
+      <div class="hours-note" style="margin-top:12px">ℹ️ The model uses your current readings to simulate 24 hours of data and predict your next hour's total house consumption.</div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+function syncVal(slider, labelId, inputId) {
+  const v = parseFloat(slider.value).toFixed(3);
+  document.getElementById(labelId).textContent = parseFloat(v).toFixed(2);
+  document.getElementById(inputId).value = v;
+}
+
+function syncSlider(input, labelId) {
+  const v = parseFloat(input.value) || 0;
+  document.getElementById(labelId).textContent = v.toFixed(2);
+  // find the slider sibling
+  const slider = input.previousElementSibling.previousElementSibling.querySelector('.slider');
+  if (slider) slider.value = v;
+}
+
+function getVal(id) {
+  return parseFloat(document.getElementById(id).value) || 0;
+}
+
+function resetForm() {
+  document.getElementById('resultPanel').classList.remove('show');
+  location.reload();
+}
+
+async function submitEntry() {
+  // Collect values
+  const data = {
+    dishwasher:   getVal('dishwasher'),
+    furnace1:     getVal('furnace1'),
+    furnace2:     getVal('furnace2'),
+    homeoffice:   getVal('homeoffice'),
+    fridge:       getVal('fridge'),
+    winecellar:   getVal('winecellar'),
+    garage:       getVal('garage'),
+    kitchen12:    getVal('kitchen12'),
+    kitchen14:    getVal('kitchen14'),
+    kitchen38:    getVal('kitchen38'),
+    barn:         getVal('barn'),
+    well:         getVal('well'),
+    microwave:    getVal('microwave'),
+    livingroom:   getVal('livingroom'),
+    solar:        getVal('solar'),
+    temperature:  getVal('temperature'),
+    humidity:     getVal('humidity'),
+    windspeed:    getVal('windspeed'),
+    apparenttemp: getVal('apparenttemp'),
+    pressure:     getVal('pressure'),
+    dewpoint:     getVal('dewpoint'),
+  };
+
+  // Show loading
+  document.getElementById('loadingPanel').style.display = 'block';
+  document.getElementById('entryForm').style.opacity = '0.4';
+  document.getElementById('resultPanel').classList.remove('show');
+
+  try {
+    const res  = await fetch('/predict-manual', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+
+    if (result.error) {
+      alert('Error: ' + result.error);
+      return;
+    }
+
+    // Fill results
+    document.getElementById('res-predicted').textContent = result.predicted_kw + ' kW';
+    document.getElementById('res-accuracy').textContent  = result.accuracy + '%';
+    document.getElementById('res-total').textContent     = result.input_total + ' kW';
+
+    // Suggestions
+    const sugBox = document.getElementById('suggestionsList');
+    sugBox.innerHTML = '';
+    (result.suggestions || []).forEach(s => {
+      sugBox.innerHTML += `
+        <div class="tip-card">
+          <div class="tip-icon">${s.icon}</div>
+          <div class="tip-title">${s.title}</div>
+          <div class="tip-text">${s.tip}</div>
+        </div>`;
+    });
+
+    // Show result
+    document.getElementById('resultPanel').classList.add('show');
+    document.getElementById('resultPanel').scrollIntoView({ behavior: 'smooth' });
+
+  } catch(e) {
+    alert('Something went wrong. Make sure the app is running properly.');
+  } finally {
+    document.getElementById('loadingPanel').style.display = 'none';
+    document.getElementById('entryForm').style.opacity = '1';
+  }
+}
+</script>
+</body>
+</html>

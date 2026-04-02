@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartEnergy — Predictions</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2235;--accent:#00d4aa;--accent2:#0ea5e9;--accent3:#f59e0b;--accent4:#a78bfa;--text:#e2e8f0;--muted:#64748b;--border:rgba(255,255,255,0.07);--danger:#ef4444;--success:#22c55e;--sidebar-w:240px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+.sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;}
+.sidebar-logo{padding:24px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;}.logo-name span{color:var(--accent);}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto;}
+.nav-section-label{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;padding:8px 10px 6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:500;margin-bottom:2px;transition:all 0.2s;}
+.nav-item:hover{background:var(--surface2);color:var(--text);}
+.nav-item.active{background:rgba(0,212,170,0.12);color:var(--accent);}
+.nav-icon{font-size:16px;width:20px;text-align:center;}
+.nav-badge{margin-left:auto;background:var(--accent);color:#0a0e1a;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.sidebar-footer{padding:16px 12px;border-top:1px solid var(--border);}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:var(--surface2);}
+.avatar{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent4),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:14px;}
+.user-name{font-size:13px;font-weight:500;}.user-role{font-size:11px;color:var(--muted);}
+.logout-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:9px;background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;width:100%;margin-top:6px;transition:all 0.2s;text-decoration:none;}
+.logout-btn:hover{background:rgba(239,68,68,0.1);color:#ef4444;}
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.page-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;}
+.content{padding:28px;flex:1;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.stat-mini{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.stat-mini-label{font-size:12px;color:var(--muted);margin-bottom:8px;}
+.stat-mini-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:700;}
+.stat-mini-value.green{color:var(--accent)}.stat-mini-value.blue{color:var(--accent2)}.stat-mini-value.amber{color:var(--accent3)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px;}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.card-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;}
+.chart-wrap{position:relative;height:280px;}
+.btn{padding:10px 20px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#00b894);color:#0a0e1a;font-weight:700;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,212,170,0.3);}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+table{width:100%;border-collapse:collapse;}
+th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;padding:8px 12px;border-bottom:1px solid var(--border);text-align:left;}
+td{font-size:13px;padding:12px;border-bottom:1px solid var(--border);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,0.02);}
+.badge{display:inline-block;padding:3px 9px;border-radius:12px;font-size:11px;font-weight:600;}
+.badge.good{background:rgba(34,197,94,0.12);color:var(--success);}
+.badge.warn{background:rgba(245,158,11,0.12);color:var(--accent3);}
+.badge.bad{background:rgba(239,68,68,0.12);color:var(--danger);}
+.no-data-banner{background:rgba(14,165,233,0.08);border:1px solid rgba(14,165,233,0.2);border-radius:12px;padding:18px 22px;margin-bottom:24px;font-size:14px;color:var(--accent2);}
+.prediction-hero{text-align:center;padding:32px;background:linear-gradient(135deg,rgba(0,212,170,0.08),rgba(14,165,233,0.08));border-radius:14px;border:1px solid rgba(0,212,170,0.2);margin-bottom:20px;}
+.pred-big{font-family:'Syne',sans-serif;font-size:56px;font-weight:800;color:var(--accent);line-height:1;}
+.pred-sub{font-size:14px;color:var(--muted);margin-top:8px;}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-logo"><div class="logo-icon">⚡</div><div class="logo-name">Smart<span>Energy</span></div></div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <a href="/dashboard" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
+    <a href="/predictions" class="nav-item active"><span class="nav-icon">🤖</span> Predictions <span class="nav-badge">AI</span></a>
+    <a href="/reports" class="nav-item"><span class="nav-icon">📋</span> Reports</a>
+    <a href="/alerts" class="nav-item"><span class="nav-icon">🔔</span> Alerts</a>
+    <div class="nav-section-label" style="margin-top:12px">Data</div>
+    <a href="/upload" class="nav-item"><span class="nav-icon">⬆️</span> Upload Data</a>
+    <a href="/manual-entry" class="nav-item"><span class="nav-icon">✏️</span> Enter My Data</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card"><div class="avatar">👤</div><div><div class="user-name">{{ current_user.username }}</div><div class="user-role">Administrator</div></div></div>
+    <a href="/logout" class="logout-btn">🚪 Sign Out</a>
+  </div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="page-title">AI Predictions</div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" onclick="runPrediction()">🤖 Run Prediction</button>
+      <button class="btn btn-secondary" onclick="exportPredictions()">⬇️ Export CSV</button>
+    </div>
+  </header>
+  <div class="content">
+
+    {% if not has_data %}
+    <div class="no-data-banner">
+      ℹ️ No dataset loaded. <a href="/upload" style="color:var(--accent);font-weight:600">Upload a CSV</a> or <a href="/manual-entry" style="color:var(--accent2);font-weight:600">enter data manually</a> to run predictions.
+    </div>
+    {% endif %}
+
+    <!-- Stats Row -->
+    <div class="grid-3">
+      <div class="stat-mini"><div class="stat-mini-label">Model Accuracy</div><div class="stat-mini-value green">97.4%</div></div>
+      <div class="stat-mini"><div class="stat-mini-label">Next Hour Forecast</div><div class="stat-mini-value blue" id="next-hour-forecast">
+        {% if pred_kw %}{{ pred_kw | round(4) }} kW{% else %}—{% endif %}
+      </div></div>
+      <div class="stat-mini"><div class="stat-mini-label">Model Type</div><div class="stat-mini-value amber">LSTM</div></div>
+    </div>
+
+    {% if pred_kw %}
+    <!-- Prediction Hero -->
+    <div class="prediction-hero">
+      <div style="color:var(--muted);font-size:13px;margin-bottom:8px">🤖 LSTM Model — Next Hour Prediction</div>
+      <div class="pred-big">{{ pred_kw | round(4) }} <span style="font-size:24px">kW</span></div>
+      <div class="pred-sub">Predicted total house consumption based on your last 24 data points · Accuracy: 97.4%</div>
+    </div>
+    {% endif %}
+
+    <!-- Chart -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Forecast vs Recent Consumption</span>
+        <div style="display:flex;gap:16px;align-items:center;font-size:12px;color:var(--muted)">
+          <span style="color:var(--accent)">● Actual</span>
+          <span style="color:var(--accent2)">● Forecast</span>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="predChart"></canvas></div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Recent Hourly Data vs Prediction</span></div>
+      <table>
+        <thead><tr><th>Time</th><th>Actual (kW)</th><th>Forecast (kW)</th><th>Status</th></tr></thead>
+        <tbody id="predTableBody">
+          <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px">
+            {% if has_data %}Click "Run Prediction" to generate results{% else %}Upload data first{% endif %}
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<script>
+const predKw = {{ pred_kw if pred_kw else 'null' }};
+
+document.addEventListener("DOMContentLoaded", () => {
+  buildChart();
+  if (predKw) loadRecentData();
+});
+
+function buildChart() {
+  const ctx = document.getElementById("predChart");
+  const hours = Array.from({length:24},(_,i)=>String(i).padStart(2,"0")+":00");
+  const forecast = Array(24).fill(predKw);
+  new Chart(ctx, {
+    type:"line",
+    data:{
+      labels:hours,
+      datasets:[
+        {label:"Forecast",data:forecast,borderColor:"#0ea5e9",borderDash:[5,5],tension:0,fill:false,pointRadius:2,borderWidth:2},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:"#94a3b8"}}},scales:{x:{ticks:{color:"#64748b"},grid:{color:"rgba(255,255,255,0.04)"}},y:{ticks:{color:"#64748b",callback:v=>v+" kW"},grid:{color:"rgba(255,255,255,0.04)"}}}}
+  });
+}
+
+async function loadRecentData() {
+  try {
+    const ts = await fetch("/api/timeseries?period=hourly").then(r=>r.json());
+    if (!ts.labels || !ts.data) return;
+    const last24 = ts.data.slice(-24);
+    const labels24 = ts.labels.slice(-24);
+    const tbody = document.getElementById("predTableBody");
+    tbody.innerHTML = last24.map((v,i) => `
+      <tr>
+        <td>${labels24[i] || i}</td>
+        <td>${v ? v.toFixed(4) : "—"}</td>
+        <td>${predKw ? predKw.toFixed(4) : "—"}</td>
+        <td><span class="badge ${v && predKw && Math.abs(v-predKw)/predKw > 0.1 ? 'warn' : 'good'}">${v && predKw && Math.abs(v-predKw)/predKw > 0.15 ? 'High Var' : 'Normal'}</span></td>
+      </tr>`).join("");
+  } catch(_) {}
+}
+
+async function runPrediction() {
+  const btn = document.querySelector(".btn-primary");
+  btn.disabled = true; btn.textContent = "⏳ Running…";
+  try {
+    const d = await fetch("/predict", {method:"POST"}).then(r=>r.json());
+    if (d.error) { alert(d.error); return; }
+    document.getElementById("next-hour-forecast").textContent = d.predicted_kw + " kW";
+    alert(`✅ Prediction: ${d.predicted_kw} kW | Accuracy: ${d.accuracy}%`);
+    location.reload();
+  } catch(_) { alert("Make sure data is uploaded first."); }
+  finally { btn.disabled=false; btn.textContent="🤖 Run Prediction"; }
+}
+
+function exportPredictions() { window.location="/predictions/export"; }
+window.runPrediction = runPrediction;
+window.exportPredictions = exportPredictions;
+</script>
+</body>
+</html>

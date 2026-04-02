@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartEnergy — Reports</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2235;--accent:#00d4aa;--accent2:#0ea5e9;--accent3:#f59e0b;--accent4:#a78bfa;--text:#e2e8f0;--muted:#64748b;--border:rgba(255,255,255,0.07);--danger:#ef4444;--success:#22c55e;--sidebar-w:240px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+.sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;}
+.sidebar-logo{padding:24px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;}.logo-name span{color:var(--accent);}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto;}
+.nav-section-label{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;padding:8px 10px 6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;text-decoration:none;color:var(--muted);font-size:14px;font-weight:500;margin-bottom:2px;transition:all 0.2s;}
+.nav-item:hover{background:var(--surface2);color:var(--text);}
+.nav-item.active{background:rgba(0,212,170,0.12);color:var(--accent);}
+.nav-icon{font-size:16px;width:20px;text-align:center;}
+.nav-badge{margin-left:auto;background:var(--accent);color:#0a0e1a;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.sidebar-footer{padding:16px 12px;border-top:1px solid var(--border);}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:var(--surface2);}
+.avatar{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent4),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:14px;}
+.user-name{font-size:13px;font-weight:500;}.user-role{font-size:11px;color:var(--muted);}
+.logout-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:9px;background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;width:100%;margin-top:6px;transition:all 0.2s;text-decoration:none;}
+.logout-btn:hover{background:rgba(239,68,68,0.1);color:#ef4444;}
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.page-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;}
+.content{padding:28px;flex:1;}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
+.kpi-label{font-size:12px;color:var(--muted);margin-bottom:6px;}
+.kpi-value{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;}
+.kpi-value.green{color:var(--accent)}.kpi-value.blue{color:var(--accent2)}.kpi-value.amber{color:var(--accent3)}.kpi-value.purple{color:var(--accent4)}
+.charts-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px;}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.card-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;}
+.chart-wrap{position:relative;height:240px;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;padding:8px 12px;border-bottom:1px solid var(--border);text-align:left;}
+td{font-size:13px;padding:12px;border-bottom:1px solid var(--border);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,0.02);}
+.btn{padding:9px 18px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#00b894);color:#0a0e1a;font-weight:700;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,212,170,0.3);}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+.no-data-banner{background:rgba(14,165,233,0.08);border:1px solid rgba(14,165,233,0.2);border-radius:12px;padding:18px 22px;margin-bottom:24px;font-size:14px;color:var(--accent2);}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-logo"><div class="logo-icon">⚡</div><div class="logo-name">Smart<span>Energy</span></div></div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <a href="/dashboard" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
+    <a href="/predictions" class="nav-item"><span class="nav-icon">🤖</span> Predictions <span class="nav-badge">AI</span></a>
+    <a href="/reports" class="nav-item active"><span class="nav-icon">📋</span> Reports</a>
+    <a href="/alerts" class="nav-item"><span class="nav-icon">🔔</span> Alerts</a>
+    <div class="nav-section-label" style="margin-top:12px">Data</div>
+    <a href="/upload" class="nav-item"><span class="nav-icon">⬆️</span> Upload Data</a>
+    <a href="/manual-entry" class="nav-item"><span class="nav-icon">✏️</span> Enter My Data</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-card"><div class="avatar">👤</div><div><div class="user-name">{{ current_user.username }}</div><div class="user-role">Administrator</div></div></div>
+    <a href="/logout" class="logout-btn">🚪 Sign Out</a>
+  </div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="page-title">Reports & Analytics</div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-secondary" onclick="exportCSV()">⬇️ Export CSV</button>
+    </div>
+  </header>
+  <div class="content">
+    {% if not has_data %}
+    <div class="no-data-banner">ℹ️ No dataset loaded. <a href="/upload" style="color:var(--accent);font-weight:600">Upload a CSV</a> to see real reports.</div>
+    {% endif %}
+
+    <!-- KPI Summary -->
+    {% if summary_stats %}
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-label">Total Consumption</div><div class="kpi-value green">{{ summary_stats.total_kwh }} kWh</div></div>
+      <div class="kpi-card"><div class="kpi-label">Avg Load</div><div class="kpi-value blue">{{ summary_stats.avg_kw }} kW</div></div>
+      <div class="kpi-card"><div class="kpi-label">Peak Load</div><div class="kpi-value amber">{{ summary_stats.peak_kw }} kW</div></div>
+      <div class="kpi-card"><div class="kpi-label">Data Points</div><div class="kpi-value purple">{{ "{:,}".format(summary_stats.rows) }}</div></div>
+    </div>
+    {% endif %}
+
+    <!-- Charts -->
+    <div class="charts-2">
+      <div class="card" style="margin-bottom:0">
+        <div class="card-header"><span class="card-title">Monthly Consumption (kWh)</span></div>
+        <div class="chart-wrap"><canvas id="monthlyChart"></canvas></div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <div class="card-header"><span class="card-title">Device Breakdown</span></div>
+        <div class="chart-wrap"><canvas id="deviceChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Monthly Table -->
+    <div class="card" style="margin-top:20px">
+      <div class="card-header">
+        <span class="card-title">Monthly Summary — from your data</span>
+      </div>
+      <table>
+        <thead><tr><th>Month</th><th>Consumption (kWh)</th><th>Avg Load (kW)</th><th>Peak (kW)</th><th>Est. Cost (₹)</th></tr></thead>
+        <tbody>
+          {% if report_data %}
+            {% for r in report_data %}
+            <tr>
+              <td>{{ r.month }}</td>
+              <td>{{ r.kwh }}</td>
+              <td>{{ r.avg_kw }}</td>
+              <td>{{ r.peak_kw }}</td>
+              <td>{{ r.cost }}</td>
+            </tr>
+            {% endfor %}
+          {% else %}
+          <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Upload a dataset to see monthly breakdown</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+const reportData = {{ report_data | tojson }};
+
+document.addEventListener("DOMContentLoaded", () => {
+  buildMonthlyChart();
+  buildDeviceChart();
+});
+
+function buildMonthlyChart() {
+  const ctx = document.getElementById("monthlyChart");
+  const labels = reportData.map(r=>r.month);
+  const data   = reportData.map(r=>parseFloat(r.kwh.replace(",","")));
+  new Chart(ctx, {
+    type:"bar",
+    data:{labels,datasets:[{label:"kWh",data,backgroundColor:"rgba(0,212,170,0.6)",borderColor:"#00d4aa",borderWidth:1,borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:"#94a3b8"}}},scales:{x:{ticks:{color:"#64748b"},grid:{color:"rgba(255,255,255,0.04)"}},y:{ticks:{color:"#64748b"},grid:{color:"rgba(255,255,255,0.04)"}}}}
+  });
+}
+
+async function buildDeviceChart() {
+  const ctx = document.getElementById("deviceChart");
+  try {
+    const d = await fetch("/api/devices").then(r=>r.json());
+    const labels = d.available || [];
+    if (!labels.length) return;
+    const values = labels.map(l=>d.avgs[l]||0);
+    const COLORS = ["#00d4aa","#0ea5e9","#f59e0b","#a78bfa","#ef4444","#22c55e","#fb923c","#38bdf8","#e879f9","#facc15","#4ade80","#f87171","#34d399","#60a5fa"];
+    new Chart(ctx, {
+      type:"doughnut",
+      data:{labels,datasets:[{data:values,backgroundColor:COLORS.slice(0,labels.length),borderWidth:0,hoverOffset:6}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:"65%",plugins:{legend:{position:"bottom",labels:{color:"#94a3b8",font:{size:10},padding:8}}}}
+    });
+  } catch(_) {}
+}
+
+function exportCSV() { window.location="/reports/export"; }
+</script>
+</body>
+</html>
